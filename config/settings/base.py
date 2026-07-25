@@ -262,14 +262,19 @@ CELERY_RESULT_BACKEND = config(
     default="redis://redis:6379/0",
 )
 
+# Required for Upstash (rediss://)
+CELERY_BROKER_USE_SSL = {
+    "ssl_cert_reqs": None,
+}
+
+CELERY_REDIS_BACKEND_USE_SSL = {
+    "ssl_cert_reqs": None,
+}
+
 CELERY_ACCEPT_CONTENT = ["json"]
-
 CELERY_TASK_SERIALIZER = "json"
-
 CELERY_RESULT_SERIALIZER = "json"
-
 CELERY_TIMEZONE = "Asia/Kolkata"
-
 
 from celery.schedules import crontab
 
