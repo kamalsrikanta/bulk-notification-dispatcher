@@ -31,4 +31,10 @@ urlpatterns = [
         ),
         name="swagger-ui",
     ),
+    path("", include("apps.core.urls")),
+    path(
+    "api/",
+    include("apps.notifications.urls"),
+    ),
+    
 ]

@@ -6,6 +6,7 @@ from .views import (
     SendCampaignAPIView,
     CampaignReportAPIView,
     RetryFailedEmailsAPIView,
+    DashboardAPIView,
 )
 
 urlpatterns = [
@@ -35,5 +36,10 @@ urlpatterns = [
     "<int:campaign_id>/retry/",
     RetryFailedEmailsAPIView.as_view(),
     name="retry-failed-emails",
+    ),
+    path(
+    "dashboard/",
+    DashboardAPIView.as_view(),
+    name="dashboard",
     ),
 ]

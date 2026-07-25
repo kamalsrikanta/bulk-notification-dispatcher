@@ -23,6 +23,20 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", cast=bool)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",")
+CSRF_TRUSTED_ORIGINS = config(
+    "CSRF_TRUSTED_ORIGINS",
+    default="http://localhost"
+).split(",")
+
+SECURE_BROWSER_XSS_FILTER = True
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+X_FRAME_OPTIONS = "DENY"
+
+SESSION_COOKIE_SECURE = not DEBUG
+
+CSRF_COOKIE_SECURE = not DEBUG
 
 # ==============================================================================
 # APPLICATIONS
@@ -43,13 +57,14 @@ THIRD_PARTY_APPS = [
     "django_filters",
     "drf_spectacular",
     "django_celery_results",
+    "django_celery_beat",
 ]
-
 LOCAL_APPS = [
     "apps.accounts",
     "apps.campaigns",
     "apps.recipients",
     "apps.notifications",
+    "apps.core",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -60,17 +75,21 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+
     "django.contrib.sessions.middleware.SessionMiddleware",
+
     "django.middleware.common.CommonMiddleware",
+
     "django.middleware.csrf.CsrfViewMiddleware",
+
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+
     "django.contrib.messages.middleware.MessageMiddleware",
+
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
-# ==============================================================================
-# URLS
-# ==============================================================================
 
 ROOT_URLCONF = "config.urls"
 
@@ -93,23 +112,20 @@ TEMPLATES = [
     },
 ]
 
-# ==============================================================================
-# WSGI
-# ==============================================================================
-
 WSGI_APPLICATION = "config.wsgi.application"
 
 # ==============================================================================
-# DATABASE
+# DATABASE (PostgreSQL)
 # ==============================================================================
-
-# SQLite for now.
-# We'll migrate to PostgreSQL in the next phase.
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASSWORD"),
+        "HOST": config("DB_HOST"),
+        "PORT": config("DB_PORT", cast=int),
     }
 }
 
@@ -155,13 +171,15 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = (
+    "whitenoise.storage.CompressedManifestStaticFilesStorage"
+)
 
 # ==============================================================================
 # MEDIA FILES
 # ==============================================================================
 
 MEDIA_URL = "/media/"
-
 MEDIA_ROOT = BASE_DIR / "media"
 
 # ==============================================================================
@@ -184,13 +202,23 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
+
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
     ],
+
+    "DEFAULT_PAGINATION_CLASS":
+        "rest_framework.pagination.PageNumberPagination",
+
+    "PAGE_SIZE": 10,
 }
 
 # ==============================================================================
@@ -206,7 +234,7 @@ SIMPLE_JWT = {
 }
 
 # ==============================================================================
-# API DOCUMENTATION
+# SWAGGER
 # ==============================================================================
 
 SPECTACULAR_SETTINGS = {
@@ -219,14 +247,36 @@ SPECTACULAR_SETTINGS = {
 # CELERY
 # ==============================================================================
 
-CELERY_RESULT_BACKEND = "django-db"
+CELERY_BROKER_URL = config(
+    "CELERY_BROKER_URL",
+    default="redis://redis:6379/0",
+)
 
-CELERY_CACHE_BACKEND = "django-cache"
+CELERY_RESULT_BACKEND = config(
+    "CELERY_RESULT_BACKEND",
+    default="redis://redis:6379/0",
+)
 
-# We'll configure Redis in the next phase.
+CELERY_ACCEPT_CONTENT = ["json"]
+
+CELERY_TASK_SERIALIZER = "json"
+
+CELERY_RESULT_SERIALIZER = "json"
+
+CELERY_TIMEZONE = "Asia/Kolkata"
+
+
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    "process-scheduled-campaigns": {
+        "task": "apps.notifications.tasks.scheduler.process_scheduled_campaigns",
+        "schedule": 60.0,
+    },
+}
 
 # ==============================================================================
-# EMAIL CONFIGURATION
+# EMAIL
 # ==============================================================================
 
 EMAIL_BACKEND = config("EMAIL_BACKEND")
@@ -242,16 +292,64 @@ EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
+SITE_URL = config(
+    "SITE_URL",
+    default="http://localhost:8000"
+)
 
+# ==============================================================================
+# LOGGING
+# ==============================================================================
 
-CELERY_BROKER_URL = "redis://localhost:6379/0"
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
 
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+    "formatters": {
+        "standard": {
+            "format": "[{asctime}] {levelname} {name}: {message}",
+            "style": "{",
+        },
+    },
 
-CELERY_ACCEPT_CONTENT = ["json"]
+    "handlers": {
 
-CELERY_TASK_SERIALIZER = "json"
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "standard",
+        },
 
-CELERY_RESULT_SERIALIZER = "json"
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs" / "app.log",
+            "formatter": "standard",
+        },
 
-CELERY_TIMEZONE = "Asia/Kolkata"
+        "error_file": {
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs" / "error.log",
+            "formatter": "standard",
+            "level": "ERROR",
+        },
+    },
+
+    "root": {
+        "handlers": ["console", "file"],
+        "level": "INFO",
+    },
+
+    "loggers": {
+
+        "django": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+
+        "apps": {
+            "handlers": ["console", "file", "error_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}

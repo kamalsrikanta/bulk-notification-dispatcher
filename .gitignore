@@ -8,33 +8,36 @@ __pycache__/
 venv/
 .env
 
-# Database
+# Django
 db.sqlite3
-
-# Static
+media/
 staticfiles/
+
+# IDE
+.vscode/
+.idea/
 
 # Logs
 *.log
 
-# VS Code
-.vscode/
+# Docker
+*.pid
 
 # macOS
 .DS_Store
 
+# Windows
+Thumbs.db
+
 # Pytest
 .pytest_cache/
-
-# Migrations cache
-*.pyc
-
-# Docker
-*.pid
 
 # Coverage
 .coverage
 htmlcov/
 
-# IDE
-.idea/
+# Migrations cache
+*.pyc
+
+# Environment files
+.env.*

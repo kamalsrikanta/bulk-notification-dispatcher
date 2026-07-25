@@ -43,3 +43,21 @@ class Recipient(models.Model):
 
     def __str__(self):
         return self.email
+    is_opened = models.BooleanField(
+    default=False,
+    )
+    opened_at = models.DateTimeField(
+    null=True,
+    blank=True,
+    )
+    is_clicked = models.BooleanField(
+    default=False
+    )
+    clicked_at = models.DateTimeField(
+    null=True,
+    blank=True,
+    )
+
+    click_count = models.PositiveIntegerField(
+    default=0,
+    )
