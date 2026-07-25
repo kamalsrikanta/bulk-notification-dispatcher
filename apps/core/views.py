@@ -5,7 +5,8 @@ from django.conf import settings
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from redis import Redis
+from decouple import config
 import redis
 
 
@@ -41,12 +42,9 @@ class HealthCheckAPIView(APIView):
         # Redis
         # -----------------------------
         try:
+            redis_url = config("CELERY_BROKER_URL")
 
-            client = redis.Redis(
-                host="redis",
-                port=6379,
-                db=0,
-            )
+            client = Redis.from_url(redis_url)
 
             client.ping()
 
@@ -55,7 +53,6 @@ class HealthCheckAPIView(APIView):
             }
 
         except Exception as e:
-
             overall_status = "unhealthy"
 
             redis_status = {
