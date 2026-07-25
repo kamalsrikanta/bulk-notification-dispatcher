@@ -22,10 +22,12 @@ SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = config("DEBUG", cast=bool)
 
-ALLOWED_HOSTS = ["*"] if DEBUG else config("ALLOWED_HOSTS").split(",")
-
-print("DEBUG:", DEBUG)
-print("ALLOWED_HOSTS:", ALLOWED_HOSTS)
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "bulk-notification-dispatcher.onrender.com",
+    ".onrender.com",
+]
 CSRF_TRUSTED_ORIGINS = config(
     "CSRF_TRUSTED_ORIGINS",
     default="http://localhost"
