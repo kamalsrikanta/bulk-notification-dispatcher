@@ -17,4 +17,4 @@ RUN mkdir -p logs
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT"]
+CMD ["sh", "-c", "${START_COMMAND:-python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT}"]
