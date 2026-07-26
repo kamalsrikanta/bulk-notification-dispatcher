@@ -1,4 +1,4 @@
-# Bulk Notification Dispatcher
+# Bulk Notification Dispatcher – Asynchronous Email Campaign Management System
 
 A production-inspired backend system built with Django REST Framework for managing, scheduling, and tracking bulk email campaigns using asynchronous task processing with Celery and Redis.
 
@@ -14,6 +14,16 @@ Users can create campaigns, upload recipients through CSV files, schedule email 
 The application follows a modular Django architecture and integrates Celery, Redis, PostgreSQL, Docker, and JWT authentication to simulate a production-ready notification service.
 
 ---
+## Key Highlights
+
+- Asynchronous task processing using Celery
+- Redis-based message broker
+- Dockerized multi-service architecture
+- JWT secured REST APIs
+- CSV-based bulk recipient upload
+- Email scheduling and retry mechanism
+- Campaign analytics and tracking
+- OpenAPI (Swagger) documentation
 
 ## Features
 
@@ -183,6 +193,8 @@ CELERY_RESULT_BACKEND=redis://redis:6379/0
 
 ---
 
+
+
 # 📬 API Endpoints
 
 | Method | Endpoint           | Description     |
@@ -200,42 +212,40 @@ CELERY_RESULT_BACKEND=redis://redis:6379/0
 
 **Login**
 
-<img width="1600" height="728" alt="Login" src="https://github.com/user-attachments/assets/ba327ebc-633d-4604-a716-9dda1d752774" />
+<img width="900" height="728" alt="Login" src="https://github.com/user-attachments/assets/ba327ebc-633d-4604-a716-9dda1d752774" />
 
 
 
 **Swagger UI**
-<img width="1276" height="855" alt="Swagger" src="https://github.com/user-attachments/assets/a4233499-a58d-4fe3-977b-125d0a989837" />
+<img width="900" height="855" alt="Swagger" src="https://github.com/user-attachments/assets/a4233499-a58d-4fe3-977b-125d0a989837" />
 
 
 **health**
 
-<img width="619" height="922" alt="health" src="https://github.com/user-attachments/assets/54de85af-4b22-4222-95aa-a39d5e159169" />
+<img width="900" height="922" alt="health" src="https://github.com/user-attachments/assets/54de85af-4b22-4222-95aa-a39d5e159169" />
 
 
 ```
 ```
 
 ```
-## Live Demo
-
-**Application
+**## Live Demo
 **
+🌐 **Application**
+
 https://bulk-notification-dispatcher.onrender.com/
 
-**Swagger**
+📖 **Swagger**
 
 https://bulk-notification-dispatcher.onrender.com/api/docs/
 
-**Health Check
-**
+❤️ **Health Check**
+
 https://bulk-notification-dispatcher.onrender.com/health/
 
-**Admin 
-**
-https://bulk-notification-dispatcher.onrender.com/admin/login/?next=/admin/
+⚙️ **Admin**
 
----
+https://bulk-notification-dispatcher.onrender.com/admin/
 
 ## Note
 
@@ -247,14 +257,24 @@ The complete asynchronous workflow runs correctly in the Docker-based local envi
 
 # ✨ Future Improvements
 
-- Per-recipient Celery task distribution for improved scalability
-- Flower dashboard for Celery monitoring
-- GitHub Actions CI/CD
-- Rate limiting
-- Email template engine
-- SMS and WhatsApp notifications
-- Amazon SES integration
-- Multi-tenant support
+
+✔ Per-recipient task distribution
+
+✔ Flower monitoring
+
+✔ GitHub Actions
+
+✔ Rate limiting
+
+✔ Amazon SES
+
+✔ Email templates
+
+✔ Multi-tenant architecture
+
+✔ WebSocket live progress
+
+✔ RabbitMQ supportt
 
 ---
 
