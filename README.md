@@ -199,7 +199,8 @@ CELERY_RESULT_BACKEND=redis://redis:6379/0
 
 
 Swagger UI
-<img width="1276" height="855" alt="Swagger" src="https://github.com/user-attachments/assets/05eae4a8-2798-408b-8a57-03d80b778442" />
+<img width="1276" height="855" alt="Swagger" src="https://github.com/user-attachments/assets/ee6cf02d-ebc6-441d-ab16-df9680da0c00" />
+
 
 
 ```
