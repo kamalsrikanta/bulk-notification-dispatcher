@@ -199,6 +199,8 @@ CELERY_RESULT_BACKEND=redis://redis:6379/0
 
 
 Swagger UI
+<img width="1276" height="855" alt="Swagger" src="https://github.com/user-attachments/assets/05eae4a8-2798-408b-8a57-03d80b778442" />
+
 
 ```
 http://localhost:8000/api/docs/
@@ -226,7 +228,9 @@ https://bulk-notification-dispatcher.onrender.com/health/
 Admin 
 
 https://bulk-notification-dispatcher.onrender.com/admin/login/?next=/admin/
+
 ---
+
 ## Note
 
 The hosted demo currently runs the Django web service.
