@@ -1,28 +1,35 @@
-# 📧 Bulk Notification Dispatcher
+# Bulk Notification Dispatcher
 
-A production-ready Django REST Framework backend for managing, scheduling, and tracking bulk email campaigns using Celery, Redis, PostgreSQL, and Docker.
+A production-inspired backend system built with Django REST Framework for managing, scheduling, and tracking bulk email campaigns using asynchronous task processing with Celery and Redis.
+
+
+## Overview
+
+Sending thousands of emails synchronously blocks the application and creates poor user experience.
+
+This project demonstrates how modern backend systems solve this problem using asynchronous task queues.
+
+Users can create campaigns, upload recipients through CSV files, schedule email delivery, monitor campaign progress, retry failed deliveries, and analyse campaign performance through REST APIs.
+
+The application follows a modular Django architecture and integrates Celery, Redis, PostgreSQL, Docker, and JWT authentication to simulate a production-ready notification service.
 
 ---
 
-## 🚀 Features
+## Features
 
-- User Authentication (JWT)
+- JWT Authentication
 - Campaign Management
 - CSV Recipient Upload
-- Bulk Email Sending
+- Asynchronous Email Processing
 - Email Scheduling
-- Asynchronous Task Processing (Celery)
-- Redis Message Broker
-- Email Open Tracking
-- Email Click Tracking
 - Retry Failed Emails
 - Campaign Analytics Dashboard
-- Campaign Reports
-- Dockerized Deployment
-- REST API
+- Email Open Tracking
+- Email Click Tracking
 - Swagger API Documentation
-- Unit Testing
-
+- Docker Support
+- PostgreSQL Database
+- Celery + Redis Task Queue
 ---
 
 # 🏗 System Architecture
@@ -50,57 +57,32 @@ A production-ready Django REST Framework backend for managing, scheduling, and t
 
 # 🛠 Tech Stack
 
-## Backend
-
-- Python 3.12
-- Django
-- Django REST Framework
-
-## Database
-
-- PostgreSQL
-
-## Task Queue
-
-- Celery
-- Redis
-
-## Authentication
-
-- JWT Authentication
-
-## Documentation
-
-- Swagger
-- DRF Spectacular
-
-## Deployment
-
-- Docker
-- Docker Compose
+| Category | Technology |
+|----------|------------|
+| Backend | Django, DRF |
+| Database | PostgreSQL |
+| Queue | Celery |
+| Broker | Redis |
+| Authentication | JWT |
+| Documentation | Swagger |
+| Containerization | Docker |
 
 ---
 
 # 📂 Project Structure
 
 ```
-bulk_notification_dispatcher/
-
 apps/
-│
-├── accounts/
-├── campaigns/
-├── recipients/
-├── notifications/
-├── core/
-│
+ ├── accounts/
+ ├── campaigns/
+ ├── notifications/
+ ├── recipients/
+ └── core/
+
 config/
-│
 Dockerfile
 docker-compose.yml
-requirements.txt
 manage.py
-README.md
 ```
 
 ---
@@ -203,62 +185,18 @@ CELERY_RESULT_BACKEND=redis://redis:6379/0
 
 # 📬 API Endpoints
 
-## Authentication
-
-- Register
-- Login
-- Profile
-- Refresh Token
-
-## Campaigns
-
-- Create Campaign
-- Update Campaign
-- Delete Campaign
-- Send Campaign
-- Retry Failed Emails
-- Campaign Reports
-- Dashboard
-
-## Recipients
-
-- CSV Upload
-- Campaign Recipients
-- Email Tracking
+| Method | Endpoint           | Description     |
+| ------ | ------------------ | --------------- |
+| POST   | /login             | Login           |
+| POST   | /campaigns         | Create campaign |
+| POST   | /recipients/upload | Upload CSV      |
+| POST   | /campaigns/send    | Send campaign   |
+| GET    | /dashboard         | Analytics       |
 
 ---
 
-# 📊 Dashboard Metrics
+# 📖 Screenshots
 
-- Total Campaigns
-- Processing Campaigns
-- Completed Campaigns
-- Failed Campaigns
-- Emails Sent
-- Emails Failed
-- Email Open Rate
-- Click Rate
-- Success Rate
-
----
-
-# 🧪 Testing
-
-Run authentication tests
-
-```bash
-docker compose exec web python manage.py test apps.accounts.tests.AuthenticationTests
-```
-
-Run campaign tests
-
-```bash
-docker compose exec web python manage.py test apps.campaigns.tests.CampaignAPITests
-```
-
----
-
-# 📖 API Documentation
 
 Swagger UI
 
@@ -271,18 +209,42 @@ OpenAPI Schema
 ```
 http://localhost:8000/api/schema/
 ```
+## Live Demo
 
+Application
+
+https://bulk-notification-dispatcher.onrender.com/
+
+Swagger
+
+https://bulk-notification-dispatcher.onrender.com/api/docs/
+
+Health Check
+
+https://bulk-notification-dispatcher.onrender.com/health/
+
+Admin 
+
+https://bulk-notification-dispatcher.onrender.com/admin/login/?next=/admin/
 ---
+## Note
+
+The hosted demo currently runs the Django web service.
+
+Celery Worker and Celery Beat are disabled in the deployed environment because Render requires separate paid worker services.
+
+The complete asynchronous workflow runs correctly in the Docker-based local environment.
 
 # ✨ Future Improvements
 
-- SMS Notifications
-- Push Notifications
-- WhatsApp Integration
-- Email Templates
-- A/B Testing
-- Rate Limiting
-- Multi-Tenant Support
+- Per-recipient Celery task distribution for improved scalability
+- Flower dashboard for Celery monitoring
+- GitHub Actions CI/CD
+- Rate limiting
+- Email template engine
+- SMS and WhatsApp notifications
+- Amazon SES integration
+- Multi-tenant support
 
 ---
 
