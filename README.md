@@ -195,39 +195,44 @@ CELERY_RESULT_BACKEND=redis://redis:6379/0
 
 ---
 
-# 📖 Screenshots
+# 📖 Screenshots    
 
 
-Swagger UI
-<img width="1276" height="855" alt="Swagger" src="https://github.com/user-attachments/assets/ee6cf02d-ebc6-441d-ab16-df9680da0c00" />
+**Login**
 
+<img width="1600" height="728" alt="Login" src="https://github.com/user-attachments/assets/ba327ebc-633d-4604-a716-9dda1d752774" />
+
+
+
+**Swagger UI**
+<img width="1276" height="855" alt="Swagger" src="https://github.com/user-attachments/assets/a4233499-a58d-4fe3-977b-125d0a989837" />
+
+
+**health**
+
+<img width="619" height="922" alt="health" src="https://github.com/user-attachments/assets/54de85af-4b22-4222-95aa-a39d5e159169" />
 
 
 ```
-http://localhost:8000/api/docs/
 ```
 
-OpenAPI Schema
-
-```
-http://localhost:8000/api/schema/
 ```
 ## Live Demo
 
-Application
-
+**Application
+**
 https://bulk-notification-dispatcher.onrender.com/
 
-Swagger
+**Swagger**
 
 https://bulk-notification-dispatcher.onrender.com/api/docs/
 
-Health Check
-
+**Health Check
+**
 https://bulk-notification-dispatcher.onrender.com/health/
 
-Admin 
-
+**Admin 
+**
 https://bulk-notification-dispatcher.onrender.com/admin/login/?next=/admin/
 
 ---
